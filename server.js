@@ -122,7 +122,7 @@ app.post('/setColour', function(req, res) {
     if(body.x < 0 || body.y < 0 || body.x > 999 || body.y > 999 || colours[body.c] == undefined)
       return res.send({ status: 2 });
 
-    timeouts[req.user.type + req.user.id] = AddMinutesToDate(now, 5)
+    timeouts[req.user.type + req.user.id] = AddMinutesToDate(now, 1)
     if(grid[body.x] == undefined) { grid[body.x] = {} }
     if(grid[body.x][body.y] == body.c || (grid[body.x][body.y] == undefined && body.c == 0)) { return res.send({ status: 4 }); }
     grid[body.x][body.y] = body.c;
