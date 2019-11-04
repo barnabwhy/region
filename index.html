@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>r/region</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="jquery-3.4.1.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="icon" href="favicon.png" sizes="16x16" type="image/png">
+</head>
+<body>
+  <div id="sidebar">
+    <h1>r/region</h1>
+    <b>What?</b>
+    <p style="margin-top: 0;">r/region is a web game where you can place 1 pixel of 16 colours every minute.</p>
+    <br>
+    <b>Why?</b>
+    <p style="margin-top: 0;">I wanted to recreate r/place (a previous April fools social experiment on Reddit) more faithfully to the original than other replicas.</p>
+    <br>
+    <b>How?</b>
+    <p style="margin-top: 0;">This project is open-source and the code can be viewed <a href="https://github.com/BarnMS/region" target="_blank">here</a>.</p>
+    <br>
+    <b>Who?</b>
+    <p style="margin-top: 0;">This site was made by one of the few people called Barnaby and all copyright goes to me.<br>(&copy; Barnaby#3108 2019)</p>
+    <br><br>
+    <a href="https://reddit.com/r/region" target="_blank">Subreddit</a>
+    <br>
+    <a href="https://discord.gg/C8XxnjW" target="_blank">Discord</a>
+  </div>
+  <div id="notSidebar">
+    <div id="timeout">0:00</div>
+    <div id="pickLocation" class="material-icons" onclick="pickLocation(500,500)">my_location</div>
+    <div id="position">0, 0</div>
+    <div id="zoomToggle" class="material-icons" onclick="zoomToggle()">zoom_in</div>
+    <div id="canvas">
+      <div id="canvasMove">
+        <canvas id="pixelCanvas" width="1000" height="1000"></canvas>
+        <div id="pixelPreview" data-colour="0"></div>
+      </div>
+    </div>
+    <div id="palette">
+      <div id="colours" scoff="Yes, I'm British you moron.">
+        <div class="colour" data-colour="0"></div>
+        <div class="colour" data-colour="1"></div>
+        <div class="colour" data-colour="2"></div>
+        <div class="colour" data-colour="3"></div>
+
+        <div class="colour" data-colour="4"></div>
+        <div class="colour" data-colour="5"></div>
+        <div class="colour" data-colour="6"></div>
+        <div class="colour" data-colour="7"></div>
+
+        <div class="colour" data-colour="8"></div>
+        <div class="colour" data-colour="9"></div>
+        <div class="colour" data-colour="10"></div>
+        <div class="colour" data-colour="11"></div>
+        
+        <div class="colour" data-colour="12"></div>
+        <div class="colour" data-colour="13"></div>
+        <div class="colour" data-colour="14"></div>
+        <div class="colour" data-colour="15"></div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
