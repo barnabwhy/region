@@ -13,10 +13,16 @@ async function init() {
   const timeoutResponse = await fetch('/timeout');
   const timeoutJSON = await timeoutResponse.json();
   if(timeoutJSON.auth != false) {
-    if(timeout == undefined)
+    if(timeout == undefined) {
       timeout = new Date();
-    else
+    } else {
       timeout = timeoutJSON.timeout;
+    }
+    $("#loginPlease").hide();
+    $("#sidebar").addClass("logout");
+  } else {
+    $("#loginPlease").show();
+    $("#sidebar").removeClass("logout");
   }
   const gridResponse = await fetch('/grid');
   grid = await gridResponse.json();

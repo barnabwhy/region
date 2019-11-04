@@ -29,7 +29,7 @@ body {
     width: 100%;
   }
   #sidebar {
-    width: 100%;
+    width: calc(100% - 64px);
     left: -100%;
     transition: margin-left 0.5s;
   }
@@ -154,4 +154,171 @@ body {
 }
 #pixelPreview.big {
   display: block;
+}
+
+
+#loginPlease {
+  position: absolute;
+  height: calc(100%);
+  width: calc(100%);
+  top: 0;
+  right: 0;
+  z-index: 5;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#loginPlease .content {
+  background-color: #fff;
+  padding: 30px 15px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  min-width: 200px;
+}
+#loginPlease .content a {
+  padding: 15px;
+  width: 150px;
+  border: 1px solid #eee;
+  background: transparent;
+  border-radius: 50px;
+  color: #333;
+  cursor: pointer;
+  text-decoration: none;
+}
+#loginPlease .content a:focus {
+  outline: none;
+}
+#loginPlease .content header {
+  text-align: center;
+}
+#loginPlease .content header h1 {
+  margin-top: 0;
+  font-size: 230%;
+  font-family: Arial, sans-serif;
+}
+#loginPlease .content .social-login {
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+#loginPlease .content .social-login a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.5s;
+  -webkit-transition: background 0.5s;
+  font-family: Arial, sans-serif;
+}
+#loginPlease .content .social-login a:first-child {
+  margin-right: 10px;
+}
+#loginPlease .content .social-login a:hover {
+  background-color: #eee;
+}
+#loginPlease .content .social-login a span {
+  font-size: 17px;
+  color: #777;
+  margin-left: 5px;
+}
+#loginPlease .content .login-form {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#loginPlease .content .login-form .input-group {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  width: 100%;
+  max-width: 310px;
+}
+#loginPlease .content .login-form .input-group input {
+  padding: 15px;
+  font-size: 13px;
+  border: 1px solid #e4eff8;
+  background-color: #e4eff8;
+  border-radius: 50px;
+  transition: border 0.5s;
+  -webkit-tranistion: border 0.5s;
+}
+#loginPlease .content .login-form .input-group input:focus {
+  outline: 0;
+  border-color: #20BDFF;
+}
+#loginPlease .content .login-form .input-group label {
+  color: #999;
+  font-size: 12px;
+  margin-bottom: 3px;
+  margin-left: 16px;
+}
+#loginPlease .content .login-form .input-group button {
+  background-color: #20BDFF;
+  border: unset;
+  color: #fff;
+  align-self: center;
+  margin-top: 15px;
+  transition: background 0.5s;
+  -webkit-transition: background 0.5s;
+}
+#loginPlease .content .login-form .input-group button:hover {
+  background-color: #5433FF;
+}
+#loginPlease .content footer {
+  padding-top: 15px;
+  text-align: center;
+}
+#loginPlease .content footer a {
+  color: #999;
+  text-decoration: none;
+  font-size: 11px;
+}
+
+.social-logout {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  width: 224px;
+  background: #fff;
+  border-top: 1px solid #eee;
+  border-right: 1px solid #cccccc;
+  display: none;
+}
+#sidebar.logout {
+  height: calc(100% - 83px - 64px)
+}
+#sidebar.logout > .social-logout {
+  display: block;
+}
+.social-logout a {
+  padding: 15px;
+  width: calc(100% - 30px);
+  border: 1px solid #eee;
+  background: transparent;
+  border-radius: 50px;
+  color: #333;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.5s;
+  -webkit-transition: background 0.5s;
+  font-family: Arial, sans-serif;
+}
+.social-logout a:hover {
+  background-color: #eee;
+}
+.social-logout a span {
+  font-size: 17px;
+  color: #777;
+  margin-left: 5px;
 }
