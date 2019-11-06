@@ -8,7 +8,7 @@ async function init() {
     var colourElem = document.querySelector(".colour[data-colour=\""+index+"\"]");
     colourElem.style.backgroundColor = "#"+colour.hex;
     colourElem.setAttribute("title", colour.name);
-    colourElem.addEventListener("click", () => { setColour(index, colour.hex) });
+    colourElem.addEventListener("click", () => { setColour(index, colour.hex, colourElem) });
   });
   const timeoutResponse = await fetch('/timeout');
   const timeoutJSON = await timeoutResponse.json();
@@ -28,6 +28,12 @@ async function init() {
   grid = await gridResponse.json();
   //console.log(grid);
   drawGrid();
+  setInterval(async () => {
+    const gridResponse = await fetch('/grid');
+    grid = await gridResponse.json();
+    //console.log(grid);
+  drawGrid();
+  }, 2500)
 }
 init();
 
@@ -43,6 +49,10 @@ async function setPixel(x, y, colour) {
       //console.log(Date.parse(data.timeout))
       timeout = data.timeout;
     }
+    if(data.status == 0) {
+      grid[x][y] = colour;
+      drawGrid();
+    }
   });
 }
 
@@ -55,7 +65,7 @@ setInterval(() => {
   } else {
     document.getElementById("timeout").style.visibility = "hidden";
   }
-}, 500)
+}, 100)
 
 function getTimeRemaining(endtime){
   var t = new Date(endtime).getTime() - new Date().getTime();
@@ -82,17 +92,36 @@ ctx.imageSmoothingEnabled = true;
 
 var isDown = false;
 var isMove = false;
+var wasDown = false;
 
 canvasCont.addEventListener('mousedown', function(e) {
-  isDown = true;
+  if(e.which === 3 || e.button === 2) { e.preventDefault() };
+  isDown = (e.which === 3 || e.button === 2);
+  wasDown = false;
   offset = [
     canvasMove.offsetLeft - e.clientX,
     canvasMove.offsetTop - e.clientY
   ];
 }, true);
+canvasCont.addEventListener('touchstart', function(e) {
+  isDown = true;
+  wasDown = false;
+  offset = [
+    canvasMove.offsetLeft - e.touches[0].clientX,
+    canvasMove.offsetTop - e.touches[0].clientY
+  ];
+}, true);
 
 var gridRef = [0, 0];
-canvas.addEventListener('mousemove', function(e) {
+document.addEventListener('mousemove', function(e) {
+  move(e)
+  drag(e)
+}, true);
+canvas.addEventListener('touchmove', function(e) {
+  move(e.touches[0])
+  drag(e.touches[0])
+}, true);
+function move(e) {
   gridRef = [];
   var childPos = $(canvasMove).offset();
   var parentPos = $(canvasCont).offset();
@@ -101,23 +130,52 @@ canvas.addEventListener('mousemove', function(e) {
       left: childPos.left - parentPos.left
   }
   if(zoomed) {
-    gridRef = [
-      Math.ceil((e.clientX - childOffset.left - 271)/20) -1,
-      Math.ceil((e.clientY - childOffset.top - 15)/20) -1
-    ];
+    if(window.innerWidth <= 720) {
+      gridRef = [
+        Math.ceil((e.clientX - childOffset.left - 15)/20) -1,
+        Math.ceil((e.clientY - childOffset.top - 15)/20) -1
+      ];
+    } else {
+      gridRef = [
+        Math.ceil((e.clientX - childOffset.left - 271)/20) -1,
+        Math.ceil((e.clientY - childOffset.top - 15)/20) -1
+      ];
+    }
     $("#pixelPreview").css({ left: (gridRef[0]*20), top: (gridRef[1]*20)+"px" })
   } else {
-    gridRef = [
-      Math.ceil((e.clientX - childOffset.left - 271)/2) -1,
-      Math.ceil((e.clientY - childOffset.top - 15)/2) -1
-    ];
+    if(window.innerWidth <= 720) {
+      gridRef = [
+        Math.ceil((e.clientX - childOffset.left - 15)/2) -1,
+        Math.ceil((e.clientY - childOffset.top - 15)/2) -1
+      ];
+    } else {
+      gridRef = [
+        Math.ceil((e.clientX - childOffset.left - 271)/2) -1,
+        Math.ceil((e.clientY - childOffset.top - 15)/2) -1
+      ];
+    }
     $("#pixelPreview").css({ left: (gridRef[0]*2), top: (gridRef[1]*2)+"px" })
   }
   //console.log(gridRef)
   document.getElementById("position").innerText = gridRef.join(", ");
-}, true);
+}
+
+document.addEventListener('contextmenu', function (e) {
+  if(e.target.id == "pixelPreview" || e.target.id == "canvas") e.preventDefault();
+  wasDown = false;
+}, false);
 
 document.addEventListener('mouseup', function(e) {
+  if(e.which === 3 || e.button === 2) { e.preventDefault(); e.stopPropagation(); };
+  if(!isMove && zoomed && (e.target.id == "pixelPreview" || e.target.id == "canvas") && (e.button == 0 || e.which == 1)) {
+    setPixel(gridRef[0], gridRef[1], e.srcElement.getAttribute('data-colour'))
+  }
+  isDown = false;
+  isMove = false;
+  wasDown = true;
+  setTimeout(() => { wasDown = false; },100)
+}, true);
+document.addEventListener('touchend', function(e) {
   if(!isMove && e.srcElement.id == "pixelPreview") {
     setPixel(gridRef[0], gridRef[1], e.srcElement.getAttribute('data-colour'))
   }
@@ -125,7 +183,8 @@ document.addEventListener('mouseup', function(e) {
   isMove = false;
 }, true);
 
-document.addEventListener('mousemove', function(e) {
+
+function drag(e) {
   event.preventDefault();
   if (isDown) {
     isMove = true;
@@ -136,7 +195,7 @@ document.addEventListener('mousemove', function(e) {
     if(maxTop > 0) canvasMove.style.top = Math.clamp(e.clientY + offset[1], 0, maxTop) + 'px';
     if(maxTop <= 0) canvasMove.style.top = Math.clamp(e.clientY + offset[1], maxTop, 0) + 'px';
   }
-}, true);
+}
 window.addEventListener('resize', function(e) {
   var maxLeft = $('#canvas').innerWidth() - $('#canvasMove').outerWidth()
   var maxTop = $('#canvas').innerHeight() - $('#canvasMove').outerHeight()
@@ -189,18 +248,12 @@ function drawGrid(){
     }
 }
 
-function setColour(index, hex) {
+function setColour(index, hex, elem) {
   $("#pixelPreview").css({ background: "#"+hex })
   $("#pixelPreview").attr("data-colour", index);
+  $(".colour.selected").removeClass("selected");
+  $(elem).addClass("selected");
 }
-
-var source = new EventSource("pixelUpdates");
-source.onmessage = function(event) {
-  var data = JSON.parse(event.data);
-  if(grid[data.x] == undefined) { grid[data.x] = {} };
-  grid[data.x][data.y] = data.c
-  drawGrid();
-};
 
 function pickLocation(x, y) {
   var goto = [x+0.5, y+0.5]
@@ -217,4 +270,8 @@ function pickLocation(x, y) {
   if(maxLeft <= 0) canvasMove.style.left = Math.clamp(canvasMove.offsetLeft, maxLeft, 0) + 'px';
   if(maxTop > 0) canvasMove.style.top = Math.clamp(canvasMove.offsetTop, 0, maxTop) + 'px';
   if(maxTop <= 0) canvasMove.style.top = Math.clamp(canvasMove.offsetTop, maxTop, 0) + 'px';
+}
+
+function discordWhy() {
+  $("#discordWhy").toggleClass("open");
 }

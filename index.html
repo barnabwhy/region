@@ -17,7 +17,7 @@
     <p style="margin-top: 0;">r/region is a web game where you can place 1 pixel of 16 colours every minute.</p>
     <br>
     <b>Why?</b>
-    <p style="margin-top: 0;">I wanted to recreate r/place (a previous April fools social experiment on Reddit) more faithfully to the original than other replicas.</p>
+    <p style="margin-top: 0;">I wanted to recreate r/place (the 2017 April fools social experiment on Reddit) more faithfully to the original than other replicas.</p>
     <br>
     <b>How?</b>
     <p style="margin-top: 0;">This project is open-source and the code can be viewed <a href="https://github.com/BarnMS/region" target="_blank">here</a>.</p>
@@ -27,10 +27,10 @@
     <br><br>
     <a href="https://reddit.com/r/region" target="_blank">Subreddit</a>
     <br>
-    <a href="https://discord.gg/C8XxnjW" target="_blank">Discord</a>
-    <div class="social-logout">
-      <a href="/auth/logout">Logout</a>
-    </div>
+    <a href="https://discord.gg/zxPPEuN" target="_blank">Discord</a>
+  </div>
+  <div class="social-logout">
+    <a href="/auth/logout">Logout</a>
   </div>
   <div id="notSidebar">
     <div id="timeout">0:00</div>
@@ -54,12 +54,19 @@
             <a href="/auth/discord"><img src="discordlogo.svg" alt="discord" height="32"></a>
             <a href="/auth/google"><img src="googleg.svg" alt="google" height="32"></a>
           </div>
+          <p style="font-family: Arial, sans-serif; text-align: center;">
+            Discord login recommended. <button onclick="discordWhy()">Why?</button>
+          </p>
+          <ul id="discordWhy">
+            <b>Discord Login Benefits</b>
+            <li>Your pixel milestones are synced with your Discord account and are displayed on the server.</li>
+            <li>You get a fancy badge on the game chat.</li></ul>
         </section>
       </div>
     </div>
     <div id="palette">
       <div id="colours" scoff="Yes, I'm British you moron.">
-        <div class="colour" data-colour="0"></div>
+        <div class="colour selected" data-colour="0"></div>
         <div class="colour" data-colour="1"></div>
         <div class="colour" data-colour="2"></div>
         <div class="colour" data-colour="3"></div>
@@ -83,4 +90,4 @@
   </div>
   <script src="script.js"></script>
 </body>
-</html>
+</html>•

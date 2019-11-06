@@ -6,7 +6,6 @@ var express  = require('express')
 
 var DiscordStrategy = require('passport-discord').Strategy
   , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
-  , refresh = require('passport-oauth2-refresh');
 
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -21,7 +20,7 @@ var gScopes = ['email', 'profile', 'openid'];
 var discordStrat = new DiscordStrategy({
     clientID: '640258963543425034',
     clientSecret: '4iYvy2tx9O3aYtkyDPh8kaowfK1EDLw9',
-    callbackURL: 'http://localhost:80/auth/discord/callback'
+    callbackURL: 'https://www.region.ml/auth/discord/callback'
 },
 function(accessToken, refreshToken, profile, done) {
   process.nextTick(function() {
@@ -30,9 +29,9 @@ function(accessToken, refreshToken, profile, done) {
 });
 
 var googleStrat = new GoogleStrategy({
-  clientID: "371166401878-fql6j4b08fh1fq0uiur1r0im8cv8iq37.apps.googleusercontent.com",
-  clientSecret: "PFW4Y5g7GhzLYNSB999c6oNb",
-  callbackURL: "http://localhost:80/auth/google/callback",
+  clientID: "371166401878-f5rvneknvch6ne4vtb0u75koh2nukcpc.apps.googleusercontent.com",
+  clientSecret: "92__vhIR_dtmFa9l9uYuhA1N",
+  callbackURL: "https://www.region.ml/auth/google/callback",
   scope: gScopes
 },
 function(accessToken, refreshToken, profile, done) {
@@ -43,9 +42,7 @@ function(accessToken, refreshToken, profile, done) {
 )
 
 passport.use(discordStrat);
-refresh.use(discordStrat);
 passport.use(googleStrat);
-refresh.use(googleStrat);
 
 app.use(session({
   secret: 'keyboard cat',
@@ -83,7 +80,7 @@ var cache = (duration) => {
 
 app.get('/auth/discord', passport.authenticate('discord', { scope: dScopes }), function(req, res) {});
 app.get('/auth/discord/callback',
-    passport.authenticate('discord', { failureRedirect: '/' }), function(req, res) { req.user.type = "d"; res.redirect('/') } // auth success
+    passport.authenticate('discord', { failureRedirect: '/fail' }), function(req, res) { req.user.type = "d"; res.redirect('/') } // auth success
 );
 app.get('/auth/google', passport.authenticate('google', { scope: gScopes }), function(req, res) {});
 app.get('/auth/google/callback',
@@ -115,20 +112,25 @@ app.post('/setColour', function(req, res) {
   if(!req.isAuthenticated()) {
     return res.send({ status: 3 });
   }
-  var now = new Date();
-  if(timeouts[req.user.type + req.user.id] == undefined || new Date(timeouts[req.user.type + req.user.id]) < now) {
+  if(pixelCounts[req.user.type+req.user.id] == undefined) {
+    pixelCounts[req.user.type+req.user.id] = 0;
+  }
+  if(timeouts[req.user.type + req.user.id] == undefined || new Date(timeouts[req.user.type + req.user.id]) < new Date()) {
     var body = req.body;
     //console.log(req)
     if(body.x < 0 || body.y < 0 || body.x > 999 || body.y > 999 || colours[body.c] == undefined)
       return res.send({ status: 2 });
 
-    timeouts[req.user.type + req.user.id] = AddMinutesToDate(now, 1)
+    timeouts[req.user.type + req.user.id] = AddMinutesToDate(new Date(), 1)
+    
+    pixelCounts[req.user.type+req.user.id] += 1;
+    if(req.user.type == "d") { setPixelRole(req.user.id, pixelCounts[req.user.type+req.user.id]) };
+    
     if(grid[body.x] == undefined) { grid[body.x] = {} }
     if(grid[body.x][body.y] == body.c || (grid[body.x][body.y] == undefined && body.c == 0)) { return res.send({ status: 4 }); }
     grid[body.x][body.y] = body.c;
     //console.log(grid[body.x][body.y]);
     res.send({ status: 0, timeout: timeouts[req.user.type + req.user.id] })
-    sse.send({ x: body.x, y: body.y, c: body.c });
   } else {
     res.send({ status: 1, timeout: timeouts[req.user.type + req.user.id] })
   }
@@ -141,14 +143,9 @@ app.get('/grid', cache(1), function(req, res) {
   res.send(grid);
 });
 
-var SSE = require('express-sse');
-var sse = new SSE();
-
-app.get('/pixelUpdates', sse.init);
-
-app.listen(80, function (err) {
+app.listen(8080, function (err) {
     if (err) return console.log(err)
-    console.log('Listening at http://localhost:80/')
+    console.log('Listening at 8080')
 })
 
 //Canvas Stuff
@@ -160,6 +157,7 @@ const colours = [
 ];
 
 var grid = require("./grid.json");
+var pixelCounts = require("./pixelCounts.json");
 
 var fs = require("fs");
 
@@ -171,6 +169,7 @@ function exitHandler(options, err) {
     console.error(err);
   }
   fs.writeFileSync('grid.json', JSON.stringify(grid));
+  fs.writeFileSync('pixelCounts.json', JSON.stringify(pixelCounts));
   fs.writeFileSync('timeouts.json', JSON.stringify(timeouts));
   //console.log("debug");
   process.exit();   // Don't think you'll need this line any more
@@ -179,19 +178,50 @@ function exitHandler(options, err) {
 setInterval(() => {
   fs.writeFileSync('grid.json', JSON.stringify(grid));
   fs.writeFileSync('timeouts.json', JSON.stringify(timeouts));
-}, 300000)
+  fs.writeFileSync('pixelCounts.json', JSON.stringify(pixelCounts));
+}, 10000)
 
 //do something when app is closing
-process.on('exit', exitHandler.bind(null,{cleanup:true}));
+process.on('exit', exitHandler.bind(null));
 
 //catches ctrl+c event
-process.on('SIGINT', exitHandler.bind(null, {exit:true}));
+process.on('SIGINT', exitHandler.bind(null));
 
 //catches uncaught exceptions
-process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
+process.on('uncaughtException', exitHandler.bind(null));
 
 var timeouts = require("./timeouts.json");
 
 function AddMinutesToDate(date,  minutes) {
   return new Date(date.getTime() + minutes * 60000);
+}
+
+// Pixel Sorter Bot
+var Discord = require("discord.js");
+var client = new Discord.Client();
+client.login("NjQxMzI4NjYwNjE1NTI4NTAw.XcHauw.SmlCesMgfUjw9fqReG2z13tiC3o")
+client.once("ready", () => {
+  client.user.setPresence({ game: { name: 'https://www.region.ml', type: "PLAYING", url: "https://www.region.ml" }, status: 'online' })
+  console.log("Pixel Sorter Connected")
+  Object.keys(pixelCounts).forEach((key) => {
+    if(key.startsWith("d")) {
+      setPixelRole(key.substr(1), pixelCounts[key])
+    }
+  })
+})
+
+function setPixelRole(userId, pixelCount) {
+  if(client.guilds.get("640463635709296640") != undefined) {
+    if(client.guilds.get("640463635709296640").members.get(userId) != undefined) {
+      var user = client.guilds.get("640463635709296640").members.get(userId)
+      if(pixelCount >= 0) client.guilds.get("640463635709296640").members.get(userId).addRole("641317549732134975")
+      if(pixelCount >= 1) client.guilds.get("640463635709296640").members.get(userId).addRole("641315857850695680")
+      if(pixelCount >= 10) client.guilds.get("640463635709296640").members.get(userId).addRole("641315766448160768")
+      if(pixelCount >= 50) client.guilds.get("640463635709296640").members.get(userId).addRole("641315787734515731")
+      if(pixelCount >= 100) client.guilds.get("640463635709296640").members.get(userId).addRole("641315812891951124")
+      if(pixelCount >= 500) client.guilds.get("640463635709296640").members.get(userId).addRole("641315847499022351")
+      if(pixelCount >= 1000) client.guilds.get("640463635709296640").members.get(userId).addRole("641315818868834304")
+      if(pixelCount >= 10000) client.guilds.get("640463635709296640").members.get(userId).addRole("641316004936548353")
+    }  
+  }
 }
