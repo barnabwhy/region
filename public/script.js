@@ -41,11 +41,13 @@ async function init() {
     $("#loginPlease").hide();
     $("#sidebar").addClass("logout");
     
+    $("#onlineMembers").show();
     var socket = io.connect();
     socket.on('counter', function (data) {
       $("#onlineMembers").text(data.count + " online");
     });
   } else {
+    $("#onlineMembers").hide();
     $("#loginPlease").show();
     $("#sidebar").removeClass("logout");
   }
