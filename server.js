@@ -220,7 +220,7 @@ app.get('/template/*', function(req, res) {
 
 var server = require('http').Server(app);
 var sharedsession = require("express-socket.io-session");
-var io = require('socket.io')(server, { pingTimeout: 5000, pingInterval: 2500 }).use(sharedsession(sessionMiddleware, {
+var io = require('socket.io')(server, { pingTimeout: 5000, pingInterval: 1000 }).use(sharedsession(sessionMiddleware, {
   autoSave:true
 })); 
 var onlineCount = 0;
