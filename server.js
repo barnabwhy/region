@@ -219,7 +219,7 @@ app.get('/template/*', function(req, res) {
 });
 
 var server = require('http').Server(app);
-var io = require('socket.io')(server, { pingTimeout: 10000, pingInterval: 5000 });
+var io = require('socket.io')(server, { pingTimeout: 5000, pingInterval: 2500 });
 var onlineCount = 0;
 var $idsConnected = [];
 io.on('connection', function (socket) {
