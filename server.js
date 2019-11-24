@@ -92,7 +92,11 @@ app.get('/auth/google/callback',
 );
 app.get('/auth/logout', function(req, res) {
     req.logout();
-    res.redirect('/');
+    if(req.query.t) {
+      res.redirect('/');
+    } else {
+      res.redirect('/?t='+req.query.t);
+    }
 });
 app.get('/auth/info', function(req, res) {
   if (!req.isAuthenticated()) {
