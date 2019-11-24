@@ -227,14 +227,14 @@ io.on('connection', function (socket) {
   if (!$idsConnected.hasOwnProperty($id)) {
   	$idsConnected[$id] = 1;
   	onlineCount++;
-    socket.emit('counter', {count:onlineCount});
+    io.emit('counter', {count:onlineCount});
   }
   /* Disconnect socket */
   socket.on('disconnect', function() {
   	if ($idsConnected.hasOwnProperty($id)) {
   		delete $idsConnected[$id];
 	    onlineCount--;
-      socket.emit('counter', {count:onlineCount});
+      io.emit('counter', {count:onlineCount});
   	}
   });
 });
