@@ -229,7 +229,6 @@ io.on('connection', function (socket) {
   	onlineCount++;
     socket.emit('counter', {count:onlineCount});
   }
-  console.log("client is connected");
   /* Disconnect socket */
   socket.on('disconnect', function() {
   	if ($ipsConnected.hasOwnProperty($ipAddress)) {
