@@ -168,6 +168,7 @@
       </div>
     </div>
   </div>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
   <script src="/howler.js"></script>
   <script src="script.js?v=0000000014"></script>
   <script>
@@ -175,12 +176,5 @@
       if(wasMove) e.preventDefault();
     });
   </script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-  <script type="text/javascript">
-    var socket = io.connect();
-    socket.on('counter', function (data) {
-      $("#onlineMembers").text(data.count + " online");
-    });
-  </script>  
 </body>
 </html>

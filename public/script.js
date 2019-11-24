@@ -40,6 +40,11 @@ async function init() {
     }
     $("#loginPlease").hide();
     $("#sidebar").addClass("logout");
+    
+    var socket = io.connect();
+    socket.on('counter', function (data) {
+      $("#onlineMembers").text(data.count + " online");
+    });
   } else {
     $("#loginPlease").show();
     $("#sidebar").removeClass("logout");

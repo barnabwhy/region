@@ -221,18 +221,18 @@ app.get('/template/*', function(req, res) {
 var server = require('http').Server(app);
 var io = require('socket.io')(server, { pingTimeout: 5000, pingInterval: 2500 });
 var onlineCount = 0;
-var $ipsConnected = [];
+var $idsConnected = [];
 io.on('connection', function (socket) {
-  var $ipAddress = socket.handshake.address;
-  if (!$ipsConnected.hasOwnProperty($ipAddress)) {
-  	$ipsConnected[$ipAddress] = 1;
+  var $id = socket.id;
+  if (!$idsConnected.hasOwnProperty($id)) {
+  	$idsConnected[$id] = 1;
   	onlineCount++;
     socket.emit('counter', {count:onlineCount});
   }
   /* Disconnect socket */
   socket.on('disconnect', function() {
-  	if ($ipsConnected.hasOwnProperty($ipAddress)) {
-  		delete $ipsConnected[$ipAddress];
+  	if ($idsConnected.hasOwnProperty($id)) {
+  		delete $idsConnected[$id];
 	    onlineCount--;
       socket.emit('counter', {count:onlineCount});
   	}
