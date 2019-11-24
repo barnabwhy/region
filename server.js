@@ -227,21 +227,22 @@ var io = require('socket.io')(server, { pingTimeout: 5000, pingInterval: 2500 })
 var onlineCount = 0;
 var $idsConnected = [];
 io.on('connection', function (socket) {
-  console.log(socket.handshake.session)
-  var $id = socket.id;
-  if (!$idsConnected.hasOwnProperty($id)) {
-  	$idsConnected[$id] = 1;
-  	onlineCount++;
-    io.emit('counter', {count:onlineCount});
-  }
-  /* Disconnect socket */
-  socket.on('disconnect', function() {
-  	if ($idsConnected.hasOwnProperty($id)) {
-  		delete $idsConnected[$id];
-	    onlineCount--;
+  if(socket.handshake.session && socket.handshake.session.passport && socket.handshake.session.passport.id && socket.handshake.session.passport.type) {
+    var $id = socket.handshake.session.passport.type+socket.handshake.session.passport.id;
+    if (!$idsConnected.hasOwnProperty($id)) {
+      $idsConnected[$id] = 1;
+      onlineCount++;
       io.emit('counter', {count:onlineCount});
-  	}
-  });
+    }
+    /* Disconnect socket */
+    socket.on('disconnect', function() {
+      if ($idsConnected.hasOwnProperty($id)) {
+        delete $idsConnected[$id];
+        onlineCount--;
+        io.emit('counter', {count:onlineCount});
+      }
+    });
+  }
 });
 
 server.listen(31082, function (err) {
