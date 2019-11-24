@@ -92,6 +92,7 @@
     <div id="timeout">0:00</div>
     <div id="pickLocation" class="material-icons" onclick="$('#locationPicker').show(); $('#locationOverlay').show();">my_location</div>
     <div id="position">0, 0</div>
+    <div id="onlineMembers">1 online</div>
     <div id="zoomToggle" class="material-icons" onclick="zoomToggle()">zoom_in</div>
     <div id="locationOverlay" onclick="$('#locationPicker').hide(); $('#locationOverlay').hide();"></div>
     <div id="locationPicker">
@@ -174,5 +175,12 @@
       if(wasMove) e.preventDefault();
     });
   </script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+  <script type="text/javascript">
+    var socket = io.connect();
+    socket.on('counter', function (data) {
+      $("#onlineMembers").text(data.count + " online");
+    });
+  </script>  
 </body>
 </html>

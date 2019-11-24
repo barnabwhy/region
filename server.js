@@ -218,7 +218,28 @@ app.get('/template/*', function(req, res) {
   }
 });
 
-app.listen(31082, function (err) {
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+var onlineCount = 0;
+var $idsConnected = [];
+io.on('connection', function (socket) {
+  var $id = socket.id;
+  if (!$idsConnected.hasOwnProperty($id)) {
+  	$idsConnected[$id] = 1;
+  	onlineCount++;
+    socket.emit('counter', {count:onlineCount});
+  }
+  /* Disconnect socket */
+  socket.on('disconnect', function() {
+  	if ($idsConnected.hasOwnProperty($id)) {
+  		delete $idsConnected[$id];
+	    onlineCount--;
+      io.emit('counter', {count:onlineCount});
+  	}
+  });
+});
+
+server.listen(31082, function (err) {
     if (err) return console.log(err)
     console.log('Listening at 31082')
 })
