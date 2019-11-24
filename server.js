@@ -92,7 +92,6 @@ app.get('/auth/google/callback',
 );
 app.get('/auth/logout', function(req, res) {
     req.logout();
-    console.log(req.query)
     if(req.query.t) {
       res.redirect('/?t='+req.query.t);
     } else {
