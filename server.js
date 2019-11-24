@@ -52,8 +52,7 @@ app.set('trust proxy', 2)
 var sessionMiddleware = session({
   secret: 'keyboard cat',
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true }
+  saveUninitialized: true
 })
 app.use(sessionMiddleware);
 app.use(passport.initialize());
@@ -227,8 +226,8 @@ var io = require('socket.io')(server, { pingTimeout: 5000, pingInterval: 2500 })
 var onlineCount = 0;
 var $idsConnected = [];
 io.on('connection', function (socket) {
-  if(socket.handshake.session && socket.handshake.session.passport && socket.handshake.session.passport.id && socket.handshake.session.passport.type) {
-    var $id = socket.handshake.session.passport.type+socket.handshake.session.passport.id;
+  if(socket.handshake.session && socket.handshake.session.passport && socket.handshake.session.passport.user.id && socket.handshake.session.passport.user.type) {
+    var $id = socket.handshake.session.passport.user.type+socket.handshake.session.passport.user.id;
     if (!$idsConnected.hasOwnProperty($id)) {
       $idsConnected[$id] = 1;
       onlineCount++;
