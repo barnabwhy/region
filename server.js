@@ -49,12 +49,13 @@ passport.use(discordStrat);
 passport.use(googleStrat);
 
 app.set('trust proxy', 2)
-app.use(session({
+var sessionMiddleware = session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: true }
-}))
+})
+app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static("public"))
@@ -219,10 +220,15 @@ app.get('/template/*', function(req, res) {
 });
 
 var server = require('http').Server(app);
-var io = require('socket.io')(server, { pingTimeout: 5000, pingInterval: 2500 });
+var io = require('socket.io')(server, { pingTimeout: 5000, pingInterval: 2500 }).use(function(socket, next){
+  // Wrap the express middleware
+  sessionMiddleware(socket.request, {}, next);
+});
 var onlineCount = 0;
 var $idsConnected = [];
 io.on('connection', function (socket) {
+  console.log(socket.request.isAuthenticated())
+  console.log(socket.request.user)
   var $id = socket.id;
   if (!$idsConnected.hasOwnProperty($id)) {
   	$idsConnected[$id] = 1;
@@ -287,7 +293,7 @@ process.on('exit', exitHandler.bind(null));
 process.on('SIGINT', exitHandler.bind(null));
 
 //catches uncaught exceptions
-process.on('uncaughtException', exitHandler.bind(null));
+//process.on('uncaughtException', exitHandler.bind(null));
 
 var timeouts = requireSafe("./timeouts.json");
 
