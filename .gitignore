@@ -1,0 +1,11 @@
+timeouts.json
+grid.json
+pixelCounts.json
+pixelDMs.json
+templates.json
+bans.json
+mods.json
+config.json
+node_modules
+electron/node_modules
+package-lock.json

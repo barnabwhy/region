@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>r/region: Template Editor</title>
+  <link rel="stylesheet" href="style.css?v=0000000011">
+  <script src="jquery-3.4.1.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="icon" href="favicon.png" sizes="16x16" type="image/png">
+</head>
+<body style="background: #aaaaaa;">
+  <div id="sidebar">
+    <h1>r/region</h1>
+    <b>Template Editor</b>
+    <p style="margin-top: 0;">Use the template editor to create templates to help you and your friends create pixel art.</p>
+    <div id="uploadImg">
+      <b>Upload</b>
+      <br><br>
+      <label for="file-upload" class="material-icons template-file-upload">
+          cloud_upload
+      </label>
+      <span style="font-size: 11px; margin-left: 16px;">(Max 256x256)</span>
+      <input id="file-upload" class="template-file" type="file" accept="image/*"/>
+    </div>
+    <p id="imageWidth">Width: 0</p>
+    <p id="imageHeight">Height: 0</p>
+    <p id="imagePixels">Pixels: 0</p>
+    <br>
+    X: <input class="template-coordinate" id="coordX" type="number" value="0" min="0" max="999">
+    <br><br>
+    Y: <input class="template-coordinate" id="coordY" type="number" value="0" min="0" max="999">
+    <br><br>
+    <button id="templateCreate" onclick="createTemplate()">Create</button>
+    <br><br><br>
+    <p style="margin-top: 0;">This site was made by one of the few people called Barnaby and all copyright goes to me.<br>(&copy; Barnaby#3108 2019)</p>
+    <br><br>
+    <a href="https://reddit.com/r/region" target="_blank">Subreddit</a>
+    <br>
+    <a href="https://discord.gg/zxPPEuN" target="_blank">Discord</a>
+  </div>
+  <div id="notSidebar">
+    <div id="canvas" style="height: calc(100% - 32px);">
+      <div id="canvasMove">
+        <canvas id="pixelCanvas" width="1000" height="1000"></canvas>
+        <canvas id="templateCreateCanvas" width="1000" height="1000"></canvas>
+      </div>
+    </div>
+  </div>
+  <p id="result"></p>
+
+  <script src="marvinj-1.0.min.js"></script>
+  <script src="nearestColor.js"></script>
+  <script src="templateScript.js?v=000000001"></script>
+  <script>
+    document.addEventListener('contextmenu', function (e) {
+      if(wasMove) e.preventDefault();
+    });
+  </script>
+</body>
+</html>

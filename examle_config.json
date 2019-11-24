@@ -1,0 +1,30 @@
+{
+  "auth": {
+    "discord": {
+      "clientID": "clientID",
+      "clientSecret": "clientSecret",
+      "callbackURL": "https://website/auth/discord/callback"
+    },
+    "google": {
+      "clientID": "clientID",
+      "clientSecret": "clientSecret",
+      "callbackURL": "https://website/auth/google/callback"
+    }
+  },
+  "bot": {
+    "token": "bot_token",
+    "guild": "guild_id",
+    "roles": {
+      "0": "role_id",
+      "1": "role_id",
+      "10": "role_id",
+      "50": "role_id",
+      "100": "role_id",
+      "500": "role_id",
+      "1000": "role_id",
+      "10000": "role_id"
+    },
+    "pixelChannel": "channel_id",
+    "colourEmojis": ["<:white:644282017256833024>","<:light_grey:644282017235730432>","<:dark_grey:644282017046986753>","<:black:644282017269415946>","<:pink:644282017269284864>","<:red:644282016933609524>","<:orange:644282017256833058>","<:brown:644282017005043713>","<:yellow:644282017256833056>","<:light_green:644282017042661397>","<:green:644282017491451914>","<:aqua_blue:644282017214890024>","<:green_blue:644282017357365278>","<:blue:644282017407565834>","<:violet:644282017231405076>","<:purple:644282017063895042>"]
+  }
+}

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>r/region</title>
+  <link rel="stylesheet" href="style.css?v=0000000011">
+  <script src="jquery-3.4.1.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="icon" href="favicon.png" sizes="16x16" type="image/png">
+  <meta http-equiv='cache-control' content='no-cache'>
+  <meta http-equiv='expires' content='0'>
+  <meta http-equiv='pragma' content='no-cache'>
+
+  <meta property="og:title" content="r/region" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="http://region.ml/logo.png" />
+</head>
+<body>
+  <div id="sidebar">
+    <div id="sidebarClose" class="material-icons" onclick="$('#sidebar').removeClass('open')">close</div>
+    <h1>r/region</h1>
+    <b>Rules</b>
+    <p style="margin-top: 0;">
+      <b>1.</b> On no occasion is NSFW content accepted.<br>
+      <b>2.</b> Breaking the law is against the rules. (UK laws)<br>
+      <b>3.</b> Obscene language is allowed but slurs are a grey area.<br>
+      <b>4.</b> Bots, auto-clickers and other automated systems are against the rules.
+    </p><br>
+    <b>How To Play</b>
+    <p style="margin-top: 0;">
+      Touch: Drag to move around and tap to place when zoomed in.
+      <br><br>
+      Mouse: Right click and drag to move and left click to place when zoomed in.
+    </p>
+    <br>
+    <b>What?</b>
+    <p style="margin-top: 0;">r/region is a web game where you can place 1 pixel of 16 colours every minute.</p>
+    <br>
+    <b>Why?</b>
+    <p style="margin-top: 0;">I wanted to recreate r/place (the 2017 April fools social experiment on Reddit) more faithfully to the original than other replicas.</p>
+    <br>
+    <b>How?</b>
+    <p style="margin-top: 0;">This project is open-source and the code can be viewed <a href="https://github.com/BarnMS/region" target="_blank">here</a>.</p>
+    <br>
+    <b>Who?</b>
+    <p style="margin-top: 0;">This site was made by one of the few people called Barnaby and all copyright goes to me.<br>(&copy; Barnaby#3108 2019)</p>
+    <br><br>
+    <a href="https://reddit.com/r/region" target="_blank">Subreddit</a>
+    <br>
+    <a href="https://discord.gg/zxPPEuN" target="_blank">Discord</a>
+  </div>
+  <div class="social-logout">
+    <a href="/auth/logout">Logout</a>
+  </div>
+
+  <div id="settings">
+    <div id="settingsClose" class="material-icons" onclick="$('#settings').removeClass('open')">close</div>
+    <h1>Settings</h1>
+    <label id="modCheckbox" class="switch small">
+      <p>Mod Mode</p>
+      <input type="checkbox">
+      <span class="slider round"></span>
+    </label>
+    <br><br>
+    <label id="soundCheckbox" class="switch small">
+        <p>Pixel Notification</p>
+      <input type="checkbox" checked>
+      <span class="slider round"></span>
+    </label>
+    <br>
+    <label id="soundSelect">
+      <p>Sound</p>
+      <select>
+        <option value="0">Default</option>
+        <option value="1">MGS Alert</option>
+        <option value="2">Honk</option>
+        <option value="3">Happy Painting</option>
+      </select>
+    </label>
+    <br><br>
+    <label id="gridCheckbox" class="switch small">
+      <p>Show Grid</p>
+      <input type="checkbox">
+      <span class="slider round"></span>
+    </label>
+  </div>
+  <div id="notSidebar">
+    <div id="sidebarOpen" class="material-icons" onclick="$('#sidebar').addClass('open')">menu</div>
+    <div id="settingsOpen" class="material-icons" onclick="$('#settings').addClass('open')">settings</div>
+    <div id="timeout">0:00</div>
+    <div id="pickLocation" class="material-icons" onclick="$('#locationPicker').show(); $('#locationOverlay').show();">my_location</div>
+    <div id="position">0, 0</div>
+    <div id="zoomToggle" class="material-icons" onclick="zoomToggle()">zoom_in</div>
+    <div id="locationOverlay" onclick="$('#locationPicker').hide(); $('#locationOverlay').hide();"></div>
+    <div id="locationPicker">
+      <b>Go to a location:</b>
+      <br><br>
+      X: <input class="coordinate" id="coordX" type="number" value="0" min="0" max="999">
+      <br><br>
+      Y: <input class="coordinate" id="coordY" type="number" value="0" min="0" max="999">
+      <br><br>
+      <button class="locationBtn" onclick="$('#locationPicker').hide(); $('#locationOverlay').hide(); pickLocation(Number($('#coordX').val()), Number($('#coordY').val()))">Go</button>
+    </div>
+    <div id="canvas">
+      <div id="canvasMove">
+        <canvas id="pixelCanvas" width="1000" height="1000"></canvas>
+        <canvas id="templateCanvas" width="4000" height="4000"></canvas>
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" id="grid">
+          <defs>
+            <pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="gray" stroke-width="1"></path>
+            </pattern>
+            <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+              <rect width="80" height="80" fill="url(#smallGrid)"></rect>
+              <path d="M 80 0 L 0 0 0 80" fill="none" stroke="black" stroke-width="1"></path>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#smallGrid)"></rect>
+        </svg>
+        <div id="pixelPreview" data-colour="0"></div>
+      </div>
+    </div>
+    <div id="loginPlease">
+      <div class="content">
+        <header>
+          <br>
+          <h1>Please Login</h1>
+        </header>
+        <section>
+          <div class="social-login">
+            <a href="/auth/discord" rel="keep-params"><img src="discordlogo.svg" alt="discord" height="32"></a>
+            <a href="/auth/google" rel="keep-params"><img src="googleg.svg" alt="google" height="32"></a>
+          </div>
+          <p style="font-family: Arial, sans-serif; text-align: center;">
+            Discord login recommended. <button onclick="discordWhy()">Why?</button>
+          </p>
+          <ul id="discordWhy">
+            <b>Discord Login Benefits</b>
+            <li>Your pixel milestones are synced with your Discord account and are displayed on the server.</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+    <div id="palette">
+      <div id="colours" scoff="Yes, I'm British you moron.">
+        <div class="colour selected" data-colour="0"></div>
+        <div class="colour" data-colour="1"></div>
+        <div class="colour" data-colour="2"></div>
+        <div class="colour" data-colour="3"></div>
+
+        <div class="colour" data-colour="4"></div>
+        <div class="colour" data-colour="5"></div>
+        <div class="colour" data-colour="6"></div>
+        <div class="colour" data-colour="7"></div>
+
+        <div class="colour" data-colour="8"></div>
+        <div class="colour" data-colour="9"></div>
+        <div class="colour" data-colour="10"></div>
+        <div class="colour" data-colour="11"></div>
+
+        <div class="colour" data-colour="12"></div>
+        <div class="colour" data-colour="13"></div>
+        <div class="colour" data-colour="14"></div>
+        <div class="colour" data-colour="15"></div>
+      </div>
+    </div>
+  </div>
+  <script src="/howler.js"></script>
+  <script src="script.js?v=0000000014"></script>
+  <script>
+    document.addEventListener('contextmenu', function (e) {
+      if(wasMove) e.preventDefault();
+    });
+  </script>
+</body>
+</html>
