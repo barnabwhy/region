@@ -164,7 +164,7 @@ function getCookie(cname) {
   return "";
 }
 
-var sounds = ['sounds/notify.wav', 'sounds/mgs.mp3', 'sounds/honk.mp3', 'sounds/bob.wav']
+var sounds = ['sounds/notify.wav', 'sounds/mgs.mp3', 'sounds/honk.mp3', 'sounds/bob.wav', 'sounds/thud.wav']
 var soundpick;
 
 var timeout = 0;
