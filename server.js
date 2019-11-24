@@ -220,15 +220,14 @@ app.get('/template/*', function(req, res) {
 });
 
 var server = require('http').Server(app);
-var io = require('socket.io')(server, { pingTimeout: 5000, pingInterval: 2500 }).use(function(socket, next){
-  // Wrap the express middleware
-  sessionMiddleware(socket.request, {}, next);
-});
+var sharedsession = require("express-socket.io-session");
+var io = require('socket.io')(server, { pingTimeout: 5000, pingInterval: 2500 }).use(sharedsession(sessionMiddleware, {
+  autoSave:true
+})); 
 var onlineCount = 0;
 var $idsConnected = [];
 io.on('connection', function (socket) {
-  console.log(socket.request.isAuthenticated())
-  console.log(socket.request.user)
+  console.log(socket.handshake.session)
   var $id = socket.id;
   if (!$idsConnected.hasOwnProperty($id)) {
   	$idsConnected[$id] = 1;
