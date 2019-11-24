@@ -94,9 +94,9 @@ app.get('/auth/logout', function(req, res) {
     req.logout();
     console.log(req.query)
     if(req.query.t) {
-      res.redirect('/');
-    } else {
       res.redirect('/?t='+req.query.t);
+    } else {
+      res.redirect('/');
     }
 });
 app.get('/auth/info', function(req, res) {
