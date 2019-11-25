@@ -8,4 +8,5 @@ mods.json
 config.json
 node_modules
 electron/node_modules
+electron\release-builds
 package-lock.json
