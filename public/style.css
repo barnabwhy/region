@@ -720,3 +720,23 @@ input[type="file"].template-file {
 #templateCreate:hover {
   background-color: #eee;
 }
+
+#templateInput {
+  position: relative;
+}
+#templateInput input {
+  -webkit-appearance: none;
+  background: white;
+  border: none;
+  border-bottom: 1px solid #cccccc;
+  padding: 6px;
+  padding-right: 40px;
+  border-radius: 0;
+}
+#templateInput input:focus {
+  outline: none;
+}
+#templateInput p {
+  font-size: 12px;
+  display: inline;
+}

@@ -3,6 +3,16 @@ var colours = {}
 var template;
 var isGrid = false;
 async function init() {
+  $("#templateInput input").val(getParameterByName("t"));
+  $("#templateInput input").on("change", async () => {
+    $("#templateInput input").val($("#templateInput input").val().match(new RegExp(/(?<=\?t=)[^$]+/))[0]);
+    if($("#templateInput input").val() != "") {
+      window.history.pushState({}, '', '/?t='+$("#templateInput input").val())
+      const templateResponse = await fetch('/template/'+$("#templateInput input").val());
+      template = await templateResponse.json();
+      drawTemplate();
+    }
+  })
   if(getCookie("soundOn") != "") $("#soundCheckbox > input").prop('checked', getCookie("soundOn") != "false");
   if(getCookie("soundPick") != "") {
     soundpick = Number(getCookie("soundPick"));
