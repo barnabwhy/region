@@ -73,7 +73,7 @@ async function init() {
     }
   }, 1000)
 
-  if(getParameterByName("t") != null) {
+  if(getParameterByName("t") != "") {
     const templateResponse = await fetch('/template/'+getParameterByName("t"));
     template = await templateResponse.json();
     drawTemplate();
