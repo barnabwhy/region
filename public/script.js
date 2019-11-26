@@ -82,15 +82,19 @@ async function init() {
 }
 init();
 
-$("#templateInput input").on("change", (async function() {
-  $("#templateInput input").val($("#templateInput input").val().match(/(?<=\?t=)[^$]+/)[0]);
+$("#templateInput input").val(getParameterByName("t"));
+$("#templateInput input").on("change", function() {
+  try { $("#templateInput input").val($("#templateInput input").val().match(/(?<=\?t=)[^$]+/)[0]); } catch(e) {}
   if($("#templateInput input").val() != "") {
     window.history.pushState({}, '', '/?t='+$("#templateInput input").val());
-    const templateResponse = await fetch('/template/'+$("#templateInput input").val());
-    template = await templateResponse.json();
-    drawTemplate();
+    fetch('/template/'+$("#templateInput input").val()).then(templateResponse => {
+      templateResponse.json().then(temp => {
+        template = temp;
+        drawTemplate();
+      });
+    })
   }
-}))
+})
 
 function getParameterByName( name ){
   name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
