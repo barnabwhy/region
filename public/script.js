@@ -82,7 +82,6 @@ async function init() {
 }
 init();
 
-$("#templateInput input").val(getParameterByName("t"));
 $("#templateInput input").on("change", (async function() {
   $("#templateInput input").val($("#templateInput input").val().match(/(?<=\?t=)[^$]+/)[0]);
   if($("#templateInput input").val() != "") {
