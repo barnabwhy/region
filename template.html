@@ -12,6 +12,7 @@
 </head>
 <body style="background: #aaaaaa;">
   <div id="sidebar">
+    <div id="sidebarClose" class="material-icons" onclick="$('#sidebar').removeClass('open')">close</div>
     <h1>r/region</h1>
     <b>Template Editor</b>
     <p style="margin-top: 0;">Use the template editor to create templates to help you and your friends create pixel art.</p>
@@ -41,6 +42,20 @@
     <a href="https://discord.gg/zxPPEuN" target="_blank">Discord</a>
   </div>
   <div id="notSidebar">
+    <div id="sidebarOpen" class="material-icons" onclick="$('#sidebar').addClass('open')">menu</div>
+    <div id="pickLocation" class="material-icons" onclick="$('#locationPicker').show(); $('#locationOverlay').show();">my_location</div>
+    <div id="position">0, 0</div>
+    <div id="zoomToggle" class="material-icons" onclick="zoomToggle()">zoom_in</div>
+    <div id="locationOverlay" onclick="$('#locationPicker').hide(); $('#locationOverlay').hide();"></div>
+    <div id="locationPicker">
+      <b>Go to a location:</b>
+      <br><br>
+      X: <input class="coordinate" id="coordX" type="number" value="0" min="0" max="999">
+      <br><br>
+      Y: <input class="coordinate" id="coordY" type="number" value="0" min="0" max="999">
+      <br><br>
+      <button class="locationBtn" onclick="$('#locationPicker').hide(); $('#locationOverlay').hide(); pickLocation(Number($('#coordX').val()), Number($('#coordY').val()))">Go</button>
+    </div>
     <div id="canvas" style="height: calc(100% - 32px);">
       <div id="canvasMove">
         <canvas id="pixelCanvas" width="1000" height="1000"></canvas>

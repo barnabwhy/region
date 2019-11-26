@@ -400,7 +400,7 @@ input[type="file"].template-file {
   display: flex !important;
   width: calc(100% - 40px);
   vertical-align: middle;
-  justify-content: flex-start;
+  justify-content: center;
 }
 .template-file-upload::after {
   font-family: Arial, sans-serif;

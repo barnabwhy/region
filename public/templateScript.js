@@ -191,7 +191,39 @@ function createTemplate() {
   }
 }
 
-var zoomed = false;
+var zoomed = false
+function zoomToggle() {
+  var newPos = []
+  if(zoomed) {
+    newPos[0] = -(canvasMove.offsetLeft - $(canvasCont).innerWidth()/2)/20
+    newPos[1] = -(canvasMove.offsetTop - $(canvasCont).innerHeight()/2)/20
+    canvasMove.style.width = "2000px";
+    canvasMove.style.height = "2000px";
+    $('#zoomToggle').text("zoom_in");
+    $("#pixelPreview").removeClass("big")
+
+  } else {
+    newPos[0] = -(canvasMove.offsetLeft - $(canvasCont).innerWidth()/2)/2
+    newPos[1] = -(canvasMove.offsetTop - $(canvasCont).innerHeight()/2)/2
+    canvasMove.style.width = "20000px";
+    canvasMove.style.height = "20000px";
+    $('#zoomToggle').text("zoom_out");
+    $("#pixelPreview").addClass("big")
+  }
+
+  zoomed = !zoomed
+
+  //console.log(newPos);
+  
+  if(zoomed && isGrid) {
+    $("#grid").css({ display: "block" })
+  } else {
+    $("#grid").css({ display: "none" })
+  }
+
+  pickLocation(newPos[0], newPos[1])
+}
+
 var offset = [0,0];
 var canvasCont = document.getElementById ("canvas");
 var canvasMove = document.getElementById ("canvasMove");
