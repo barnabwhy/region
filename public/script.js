@@ -1,5 +1,6 @@
+'esversion: 8'
 var grid = {};
-var colours = {}
+var colours = {};
 var template;
 var isGrid = false;
 async function init() {
@@ -71,24 +72,13 @@ async function init() {
         timeout = timeoutJSON.timeout;
       }
     }
-  }, 1000)
+  }, 1000);
 
   if(getParameterByName("t") != "") {
     const templateResponse = await fetch('/template/'+getParameterByName("t"));
     template = await templateResponse.json();
     drawTemplate();
-
-    $("#templateInput input").val(getParameterByName("t"));
   }
-  $("#templateInput input").on("change", async () => {
-    $("#templateInput input").val($("#templateInput input").val().match(new RegExp(/(?<=\?t=)[^$]+/))[0]);
-    if($("#templateInput input").val() != "") {
-      window.history.pushState({}, '', '/?t='+$("#templateInput input").val())
-      const templateResponse = await fetch('/template/'+$("#templateInput input").val());
-      template = await templateResponse.json();
-      drawTemplate();
-    }
-  })
 }
 init();
 

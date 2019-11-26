@@ -6,7 +6,6 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>r/region</title>
   <link rel="stylesheet" href="style.css?v=0000000013">
-  <script src="jquery-3.4.1.min.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="icon" href="favicon.png" sizes="16x16" type="image/png">
   <meta http-equiv='cache-control' content='no-cache'>
@@ -80,11 +79,11 @@
       <input type="checkbox">
       <span class="slider round"></span>
     </label>
-    <br><br>
+    <!--<br><br>
     <label id="templateInput">
       <p>Template</p>
       <input type="text" placeholder="No Template" />
-    </label>
+    </label>-->
     <br><br>
     <label id="modCheckbox" class="switch small">
       <p>Mod Mode</p>
@@ -174,13 +173,17 @@
       </div>
     </div>
   </div>
+  <script src="jquery-3.4.1.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-  <script src="/howler.js"></script>
-  <script src="script.js?v=0000000018"></script>
-  <script>
+  <script type="text/javascript" src="/howler.js"></script>
+  <script type="text/javascript" src="/script.js?v=0000000022"></script>
+  <script type="text/javascript">
     document.addEventListener('contextmenu', function (e) {
       if(wasMove) e.preventDefault();
     });
+    $(document).ready(function() {
+      init(); 
+    })
   </script>
 </body>
 </html>
