@@ -82,20 +82,6 @@ async function init() {
 }
 init();
 
-$("#templateInput input").val(getParameterByName("t"));
-$("#templateInput input").on("change", function() {
-  try { $("#templateInput input").val($("#templateInput input").val().match(/(?<=\?t=)[^$]+/)[0]); } catch(e) {}
-  if($("#templateInput input").val() != "") {
-    window.history.pushState({}, '', '/?t='+$("#templateInput input").val());
-    fetch('/template/'+$("#templateInput input").val()).then(templateResponse => {
-      templateResponse.json().then(temp => {
-        template = temp;
-        drawTemplate();
-      });
-    })
-  }
-})
-
 function getParameterByName( name ){
   name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
   var regexS = "[\\?&]"+name+"=([^&#]*)";
