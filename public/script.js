@@ -83,7 +83,7 @@ async function init() {
 init();
 
 $("#templateInput input").val(getParameterByName("t"));
-$("#templateInput input").on("change", async () => {
+$("#templateInput input").on("change", (async function() {
   $("#templateInput input").val($("#templateInput input").val().match(/(?<=\?t=)[^$]+/)[0]);
   if($("#templateInput input").val() != "") {
     window.history.pushState({}, '', '/?t='+$("#templateInput input").val());
@@ -91,7 +91,7 @@ $("#templateInput input").on("change", async () => {
     template = await templateResponse.json();
     drawTemplate();
   }
-})
+}))
 
 function getParameterByName( name ){
   name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
