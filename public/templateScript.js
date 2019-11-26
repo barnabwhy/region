@@ -200,7 +200,6 @@ function zoomToggle() {
     canvasMove.style.width = "2000px";
     canvasMove.style.height = "2000px";
     $('#zoomToggle').text("zoom_in");
-    $("#pixelPreview").removeClass("big")
 
   } else {
     newPos[0] = -(canvasMove.offsetLeft - $(canvasCont).innerWidth()/2)/2
@@ -208,20 +207,30 @@ function zoomToggle() {
     canvasMove.style.width = "20000px";
     canvasMove.style.height = "20000px";
     $('#zoomToggle').text("zoom_out");
-    $("#pixelPreview").addClass("big")
   }
 
   zoomed = !zoomed
 
   //console.log(newPos);
   
-  if(zoomed && isGrid) {
-    $("#grid").css({ display: "block" })
-  } else {
-    $("#grid").css({ display: "none" })
-  }
-
   pickLocation(newPos[0], newPos[1])
+}
+
+function pickLocation(x, y) {
+  var goto = [x+0.5, y+0.5]
+  if(zoomed) {
+    canvasMove.style.left = $(canvasCont).innerWidth()/2-goto[0]*20+"px"
+    canvasMove.style.top = $(canvasCont).innerHeight()/2-goto[1]*20+"px"
+  } else {
+    canvasMove.style.left = $(canvasCont).innerWidth()/2-goto[0]*2+"px"
+    canvasMove.style.top = $(canvasCont).innerHeight()/2-goto[1]*2+"px"
+  }
+  var maxLeft = $('#canvas').innerWidth() - $('#canvasMove').outerWidth()
+  var maxTop = $('#canvas').innerHeight() - $('#canvasMove').outerHeight()
+  if(maxLeft > 0) canvasMove.style.left = Math.clamp(canvasMove.offsetLeft, 0, maxLeft) + 'px';
+  if(maxLeft <= 0) canvasMove.style.left = Math.clamp(canvasMove.offsetLeft, maxLeft, 0) + 'px';
+  if(maxTop > 0) canvasMove.style.top = Math.clamp(canvasMove.offsetTop, 0, maxTop) + 'px';
+  if(maxTop <= 0) canvasMove.style.top = Math.clamp(canvasMove.offsetTop, maxTop, 0) + 'px';
 }
 
 var offset = [0,0];
@@ -293,6 +302,8 @@ function move(e) {
       ];
     }
   }
+  //console.log(gridRef)
+  document.getElementById("position").innerText = gridRef.join(", ");
 }
 
 document.addEventListener('mouseup', function(e) {
