@@ -148,13 +148,28 @@ app.post('/setColour', function(req, res) {
     res.send({ status: 1, timeout: new Date(timeouts[req.user.type + req.user.id]).getTime() - new Date().getTime() })
   }
 });
+
+var playingTimeouts = {}
+var playingIds = [];
+
 app.get('/timeout', function(req, res) {
   if (!req.isAuthenticated()) {
     res.send({ auth: false });
   } else {
+    if(playingTimeouts[req.user.type + req.user.id] != undefined) clearInterval(playingTimeouts[req.user.type + req.user.id])
+    if(playingIds.indexOf(req.user.type + req.user.id) == -1) playingIds.push(req.user.type + req.user.id)
+    playingTimeouts[req.user.type + req.user.id] = setTimeout(() => {
+      if(playingIds.indexOf(req.user.type + req.user.id) != -1) {
+        playingIds.splice(playingIds.indexOf(req.user.type + req.user.id), 1)
+      }
+    }, 5000)
     res.send({ timeout: new Date(timeouts[req.user.type + req.user.id]).getTime() - new Date().getTime() });
   }
 });
+app.get('/playerCount', function(req, res) {
+  res.send(playingIds.length.toString())
+});
+
 app.get('/isMod', function(req, res) {
   if (!req.isAuthenticated()) {
     res.send({ isMod: false });

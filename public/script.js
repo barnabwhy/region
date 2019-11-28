@@ -42,13 +42,7 @@ async function init() {
     $("#loginPlease").hide();
     $("#sidebar").addClass("logout");
     
-    $("#onlineMembers").show();
-    var socket = io.connect();
-    socket.on('counter', function (data) {
-      $("#onlineMembers").text(data.count + " online");
-    });
   } else {
-    $("#onlineMembers").hide();
     $("#loginPlease").show();
     $("#sidebar").removeClass("logout");
   }
@@ -72,6 +66,9 @@ async function init() {
         timeout = timeoutJSON.timeout;
       }
     }
+    const playerCountResponse = await fetch('/playerCount');
+    const playerCountText = await playerCountResponse.text();
+    $("#onlineMembers").text(playerCountText+" online")
   }, 1000);
 
   if(getParameterByName("t") != "") {
